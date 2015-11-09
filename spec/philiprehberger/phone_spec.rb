@@ -1,8 +1,20 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
+
 RSpec.describe Philiprehberger::Phone do
+  it 'has a version number' do
+    expect(Philiprehberger::Phone::VERSION).not_to be_nil
+  end
+
   describe '.parse' do
     context 'with US numbers' do
+      it 'parses "+1 (555) 123-4567" to e164 "+15551234567" and country :us' do
+        phone = described_class.parse('+1 (555) 123-4567')
+        expect(phone.e164).to eq('+15551234567')
+        expect(phone.country).to eq(:us)
+      end
+
       it 'parses E.164 format' do
         phone = described_class.parse('+15551234567')
         expect(phone.country_code).to eq('1')
@@ -10,45 +22,48 @@ RSpec.describe Philiprehberger::Phone do
         expect(phone.country).to eq(:us)
       end
 
-      it 'parses formatted number' do
-        phone = described_class.parse('+1 (555) 123-4567')
-        expect(phone.national).to eq('5551234567')
-        expect(phone.country).to eq(:us)
+      it 'formats US number correctly' do
+        phone = described_class.parse('+15551234567')
+        expect(phone.formatted).to eq('(555) 123-4567')
       end
 
-      it 'parses with country hint' do
-        phone = described_class.parse('5551234567', country: :us)
-        expect(phone.country_code).to eq('1')
-        expect(phone.national).to eq('5551234567')
+      it 'formats international correctly' do
+        phone = described_class.parse('+15551234567')
+        expect(phone.international).to eq('+1 (555) 123-4567')
       end
     end
 
     context 'with UK numbers' do
-      it 'parses UK number with country code' do
-        phone = described_class.parse('+442079460958')
-        expect(phone.country_code).to eq('44')
+      it 'parses "+44 20 7946 0958" to e164 "+442079460958"' do
+        phone = described_class.parse('+44 20 7946 0958')
+        expect(phone.e164).to eq('+442079460958')
         expect(phone.country).to eq(:gb)
       end
 
-      it 'parses with country hint' do
-        phone = described_class.parse('02079460958', country: :gb)
+      it 'parses with country hint "020 7946 0958" with country: :gb' do
+        phone = described_class.parse('020 7946 0958', country: :gb)
         expect(phone.country_code).to eq('44')
+        expect(phone.country).to eq(:gb)
       end
     end
 
-    context 'with German numbers' do
+    context 'with other countries' do
       it 'parses German number' do
         phone = described_class.parse('+4930123456789')
         expect(phone.country_code).to eq('49')
         expect(phone.country).to eq(:de)
       end
-    end
 
-    context 'with Japanese numbers' do
       it 'parses Japanese number' do
         phone = described_class.parse('+81312345678')
         expect(phone.country_code).to eq('81')
         expect(phone.country).to eq(:jp)
+      end
+
+      it 'parses French number' do
+        phone = described_class.parse('+33612345678')
+        expect(phone.country_code).to eq('33')
+        expect(phone.country).to eq(:fr)
       end
     end
   end
@@ -58,8 +73,16 @@ RSpec.describe Philiprehberger::Phone do
       expect(described_class.valid?('+15551234567')).to be true
     end
 
-    it 'returns false for too-short number' do
+    it 'returns false for too short number' do
       expect(described_class.valid?('+1555')).to be false
+    end
+
+    it 'returns false for too long number' do
+      expect(described_class.valid?('+155512345678900')).to be false
+    end
+
+    it 'returns false for letters' do
+      expect(described_class.valid?('abc')).to be false
     end
 
     it 'returns false for empty string' do
@@ -67,12 +90,12 @@ RSpec.describe Philiprehberger::Phone do
     end
   end
 
-  describe Philiprehberger::Phone::Number do
-    let(:number) { described_class.new(country_code: '1', national: '5551234567', country: :us) }
+  describe Philiprehberger::Phone::PhoneNumber do
+    let(:us_number) { described_class.new(country_code: '1', national: '5551234567', country: :us) }
 
     describe '#valid?' do
       it 'returns true for valid number' do
-        expect(number).to be_valid
+        expect(us_number).to be_valid
       end
 
       it 'returns false for wrong length' do
@@ -83,64 +106,55 @@ RSpec.describe Philiprehberger::Phone do
 
     describe '#e164' do
       it 'returns E.164 format' do
-        expect(number.e164).to eq('+15551234567')
-      end
-    end
-
-    describe '#format' do
-      it 'returns national format' do
-        expect(number.format(:national)).to eq('(555) 123-4567')
-      end
-
-      it 'returns international format' do
-        expect(number.format(:international)).to eq('+1 (555) 123-4567')
-      end
-
-      it 'returns E.164 format' do
-        expect(number.format(:e164)).to eq('+15551234567')
-      end
-    end
-
-    describe '#formatted' do
-      it 'returns national format' do
-        expect(number.formatted).to eq('(555) 123-4567')
-      end
-    end
-
-    describe '#international' do
-      it 'returns international format' do
-        expect(number.international).to eq('+1 (555) 123-4567')
+        expect(us_number.e164).to eq('+15551234567')
       end
     end
 
     describe '#country_code' do
-      it 'returns the country code' do
-        expect(number.country_code).to eq('1')
+      it 'returns the country calling code' do
+        expect(us_number.country_code).to eq('1')
+      end
+    end
+
+    describe '#national' do
+      it 'returns digits only without country code' do
+        expect(us_number.national).to eq('5551234567')
       end
     end
 
     describe '#country' do
       it 'returns the country symbol' do
-        expect(number.country).to eq(:us)
+        expect(us_number.country).to eq(:us)
       end
     end
 
-    describe '#type' do
-      it 'returns :unknown by default' do
-        expect(number.type).to eq(:unknown)
+    describe '#formatted' do
+      it 'returns country-specific format for US' do
+        expect(us_number.formatted).to eq('(555) 123-4567')
+      end
+    end
+
+    describe '#international' do
+      it 'returns international format' do
+        expect(us_number.international).to eq('+1 (555) 123-4567')
       end
     end
 
     describe '#==' do
       it 'compares by E.164' do
         other = described_class.new(country_code: '1', national: '5551234567', country: :us)
-        expect(number).to eq(other)
+        expect(us_number).to eq(other)
+      end
+
+      it 'is not equal for different numbers' do
+        other = described_class.new(country_code: '1', national: '5559999999', country: :us)
+        expect(us_number).not_to eq(other)
       end
     end
 
     describe '#to_s' do
       it 'returns E.164 string' do
-        expect(number.to_s).to eq('+15551234567')
+        expect(us_number.to_s).to eq('+15551234567')
       end
     end
   end

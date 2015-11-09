@@ -1,10 +1,9 @@
 # philiprehberger-phone
 
-[![Tests](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml)
-[![Gem Version](https://badge.fury.io/rb/philiprehberger-phone.svg)](https://rubygems.org/gems/philiprehberger-phone)
-[![License](https://img.shields.io/github/license/philiprehberger/rb-phone)](LICENSE)
+[![Gem Version](https://badge.fury.io/rb/philiprehberger-phone.svg)](https://badge.fury.io/rb/philiprehberger-phone)
+[![CI](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml)
 
-Lightweight phone number parsing, validation, and formatting
+Lightweight phone number parsing, validation, and formatting.
 
 ## Requirements
 
@@ -20,7 +19,7 @@ gem 'philiprehberger-phone'
 
 Or install directly:
 
-```bash
+```sh
 gem install philiprehberger-phone
 ```
 
@@ -34,21 +33,22 @@ phone.valid?        # => true
 phone.country_code  # => "1"
 phone.national      # => "5551234567"
 phone.country       # => :us
+phone.e164          # => "+15551234567"
 ```
 
 ### Formatting
 
 ```ruby
 phone = Philiprehberger::Phone.parse('+15551234567')
-phone.format(:national)       # => "(555) 123-4567"
-phone.format(:international)  # => "+1 (555) 123-4567"
-phone.format(:e164)           # => "+15551234567"
+phone.formatted      # => "(555) 123-4567"
+phone.international  # => "+1 (555) 123-4567"
+phone.e164           # => "+15551234567"
 ```
 
 ### Country Hint
 
 ```ruby
-phone = Philiprehberger::Phone.parse('02079460958', country: :gb)
+phone = Philiprehberger::Phone.parse('020 7946 0958', country: :gb)
 phone.country_code  # => "44"
 phone.country       # => :gb
 ```
@@ -60,13 +60,9 @@ Philiprehberger::Phone.valid?('+44 20 7946 0958')  # => true
 Philiprehberger::Phone.valid?('+1 555')             # => false
 ```
 
-### International Numbers
+### Supported Countries
 
-```ruby
-Philiprehberger::Phone.parse('+4930123456789')  # Germany
-Philiprehberger::Phone.parse('+81312345678')    # Japan
-Philiprehberger::Phone.parse('+61412345678')    # Australia
-```
+US, CA, GB, DE, FR, AU, JP, IN, BR.
 
 ## API
 
@@ -74,31 +70,29 @@ Philiprehberger::Phone.parse('+61412345678')    # Australia
 
 | Method | Description |
 |--------|-------------|
-| `.parse(number, country:)` | Parse a phone number string into a `Number` object |
-| `.valid?(number, country:)` | Check if a phone number is valid |
+| `.parse(input, country: nil)` | Parse a phone number string into a `PhoneNumber` |
+| `.valid?(input, country: nil)` | Check if a phone number is valid |
 
-### `Philiprehberger::Phone::Number`
+### `Philiprehberger::Phone::PhoneNumber`
 
 | Method | Description |
 |--------|-------------|
 | `#valid?` | Whether the number matches country length rules |
-| `#country_code` | The numeric country calling code |
-| `#national` | The national number digits |
-| `#country` | Country symbol (e.g., `:us`, `:gb`) |
-| `#e164` | E.164 format (`+15551234567`) |
-| `#format(style)` | Format as `:national`, `:international`, or `:e164` |
-| `#formatted` | National format shortcut |
-| `#international` | International format shortcut |
-| `#type` | Number type (`:mobile`, `:landline`, or `:unknown`) |
+| `#country_code` | Numeric country calling code (e.g. "1", "44") |
+| `#national` | National number digits only |
+| `#e164` | E.164 format ("+15551234567") |
+| `#formatted` | Country-specific national format |
+| `#international` | International format with country code |
+| `#country` | Country symbol (e.g. `:us`, `:gb`) |
 
 ## Development
 
-```bash
+```sh
 bundle install
-bundle exec rspec      # Run tests
-bundle exec rubocop    # Check code style
+bundle exec rspec
+bundle exec rubocop
 ```
 
 ## License
 
-MIT
+MIT License. See [LICENSE](LICENSE) for details.

@@ -7,7 +7,7 @@ module Philiprehberger
   module Phone
     class ParseError < StandardError; end
 
-    class Number
+    class PhoneNumber
       attr_reader :country_code, :national, :country
 
       def initialize(country_code:, national:, country:)
@@ -30,29 +30,12 @@ module Philiprehberger
         "+#{@country_code}#{@national}"
       end
 
-      def format(style = :national)
-        case style
-        when :e164
-          e164
-        when :international
-          "+#{@country_code} #{format_national}"
-        when :national
-          format_national
-        else
-          format_national
-        end
-      end
-
       def formatted
-        format(:national)
+        format_national
       end
 
       def international
-        format(:international)
-      end
-
-      def type
-        :unknown
+        "+#{@country_code} #{format_national}"
       end
 
       def to_s
@@ -60,7 +43,7 @@ module Philiprehberger
       end
 
       def ==(other)
-        other.is_a?(Number) && e164 == other.e164
+        other.is_a?(PhoneNumber) && e164 == other.e164
       end
 
       private
@@ -71,54 +54,53 @@ module Philiprehberger
 
         groups = data[:groups]
         digits = @national.dup
-        parts = groups.map do |len|
-          part = digits.slice!(0, len)
-          part
-        end
+        parts = groups.map { |len| digits.slice!(0, len) }
         parts << digits unless digits.empty?
+        parts.reject!(&:empty?)
 
-        sprintf(data[:format], *parts)
-      rescue ArgumentError
+        format(data[:format], *parts)
+      rescue ArgumentError, TypeError
         @national
+      end
+
+      def format(pattern, *args)
+        pattern % args
       end
     end
 
-    def self.parse(number, country: nil)
-      digits = number.to_s.gsub(/[^\d+]/, '')
-      has_plus = digits.start_with?('+')
-      digits = digits.delete('+')
+    def self.parse(input, country: nil)
+      cleaned = input.to_s.strip
+      return PhoneNumber.new(country_code: '', national: '', country: nil) if cleaned.empty?
 
-      if has_plus || country.nil?
-        cc, national, sym = detect_country(digits, country)
-      else
+      has_plus = cleaned.start_with?('+')
+      digits = cleaned.gsub(/[^\d]/, '')
+
+      if has_plus
+        cc, national, sym = detect_country_from_digits(digits)
+      elsif country
         data = COUNTRIES[country]
         raise ParseError, "unknown country: #{country}" unless data
 
         cc = data[:code]
         national = digits.delete_prefix(cc)
-        national = digits if national == digits && !digits.start_with?(cc)
         sym = country
+      else
+        cc, national, sym = detect_country_from_digits(digits)
       end
 
-      Number.new(country_code: cc, national: national, country: sym)
+      PhoneNumber.new(country_code: cc, national: national, country: sym)
     end
 
-    def self.valid?(number, country: nil)
-      parse(number, country: country).valid?
+    def self.valid?(input, country: nil)
+      parse(input, country: country).valid?
     rescue ParseError
       false
     end
 
-    def self.detect_country(digits, hint = nil)
-      if hint
-        data = COUNTRIES[hint]
-        if data
-          national = digits.delete_prefix(data[:code])
-          return [data[:code], national, hint]
-        end
-      end
-
+    def self.detect_country_from_digits(digits)
       [3, 2, 1].each do |len|
+        next if digits.length < len
+
         code = digits[0, len]
         next unless COUNTRY_CODE_MAP[code]
 
@@ -127,9 +109,9 @@ module Philiprehberger
         return [code, national, sym]
       end
 
-      [digits[0, 1], digits[1..], nil]
+      ['', digits, nil]
     end
 
-    private_class_method :detect_country
+    private_class_method :detect_country_from_digits
   end
 end
