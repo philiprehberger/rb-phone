@@ -1,6 +1,7 @@
 # philiprehberger-phone
 
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-phone.svg)](https://badge.fury.io/rb/philiprehberger-phone)
+$badge_line
 [![CI](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml)
 
 Lightweight phone number parsing, validation, and formatting.
