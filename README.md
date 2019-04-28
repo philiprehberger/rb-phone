@@ -27,7 +27,7 @@ gem install philiprehberger-phone
 ## Usage
 
 ```ruby
-require 'philiprehberger/phone'
+require "philiprehberger/phone"
 
 phone = Philiprehberger::Phone.parse('+1 (555) 123-4567')
 phone.valid?        # => true
