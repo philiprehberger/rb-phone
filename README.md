@@ -3,6 +3,7 @@
 [![Tests](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-phone.svg)](https://rubygems.org/gems/philiprehberger-phone)
 [![License](https://img.shields.io/github/license/philiprehberger/rb-phone)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
 Lightweight phone number parsing, validation, and formatting
 
@@ -96,4 +97,4 @@ bundle exec rubocop
 
 ## License
 
-MIT
+[MIT](LICENSE)
