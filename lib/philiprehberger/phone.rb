@@ -2,12 +2,21 @@
 
 require_relative 'phone/version'
 require_relative 'phone/countries'
+require_relative 'phone/phone_type'
+require_relative 'phone/area_code'
+require_relative 'phone/vanity'
+require_relative 'phone/shortcode'
+require_relative 'phone/carrier'
 
 module Philiprehberger
   module Phone
     class ParseError < StandardError; end
 
     class PhoneNumber
+      include PhoneTypeDetection
+      include AreaCodeLookup
+      include CarrierLookup
+
       attr_reader :country_code, :national, :country
 
       def initialize(country_code:, national:, country:)
@@ -95,6 +104,14 @@ module Philiprehberger
       parse(input, country: country).valid?
     rescue ParseError
       false
+    end
+
+    def self.vanity_to_digits(input)
+      VanityConversion.vanity_to_digits(input)
+    end
+
+    def self.valid_shortcode?(input, country: :us)
+      ShortcodeValidation.valid_shortcode?(input, country: country)
     end
 
     def self.detect_country_from_digits(digits)
