@@ -695,7 +695,7 @@ RSpec.describe Philiprehberger::Phone do
       end
 
       it 'returns :unknown for country without patterns' do
-        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '65', national: '91234567', country: :sg)
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '99', national: '91234567', country: :zz)
         expect(phone.phone_type).to eq(:unknown)
       end
     end
@@ -961,6 +961,163 @@ RSpec.describe Philiprehberger::Phone do
       it 'returns nil for very short national number' do
         phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '1', national: '12', country: :us)
         expect(phone.carrier).to be_nil
+      end
+    end
+  end
+
+  describe '#to_h' do
+    it 'returns a hash with all phone number attributes' do
+      phone = described_class.parse('+15551234567')
+      result = phone.to_h
+      expect(result).to be_a(Hash)
+      expect(result[:country_code]).to eq('1')
+      expect(result[:national]).to eq('5551234567')
+      expect(result[:country]).to eq(:us)
+      expect(result[:e164]).to eq('+15551234567')
+      expect(result[:formatted]).to eq('(555) 123-4567')
+      expect(result[:international]).to eq('+1 (555) 123-4567')
+      expect(result[:valid]).to be true
+    end
+
+    it 'includes phone_type, area_code_info, and carrier keys' do
+      phone = described_class.parse('+12125551234')
+      result = phone.to_h
+      expect(result).to have_key(:phone_type)
+      expect(result).to have_key(:area_code_info)
+      expect(result).to have_key(:carrier)
+    end
+  end
+
+  describe '#inspect' do
+    it 'returns a human-readable string with e164 and country' do
+      phone = described_class.parse('+15551234567')
+      expect(phone.inspect).to eq('#<Philiprehberger::Phone::PhoneNumber +15551234567 (us)>')
+    end
+
+    it 'shows unknown for nil country' do
+      phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '99', national: '12345', country: nil)
+      expect(phone.inspect).to eq('#<Philiprehberger::Phone::PhoneNumber +9912345 (unknown)>')
+    end
+  end
+
+  describe '#phone_type for expanded countries' do
+    context 'with Netherlands numbers' do
+      it 'detects mobile' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '31', national: '612345678', country: :nl)
+        expect(phone.phone_type).to eq(:mobile)
+      end
+
+      it 'detects toll_free' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '31', national: '8001234567', country: :nl)
+        expect(phone.phone_type).to eq(:toll_free)
+      end
+    end
+
+    context 'with Swiss numbers' do
+      it 'detects mobile' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '41', national: '751234567', country: :ch)
+        expect(phone.phone_type).to eq(:mobile)
+      end
+
+      it 'detects toll_free' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '41', national: '800123456', country: :ch)
+        expect(phone.phone_type).to eq(:toll_free)
+      end
+    end
+
+    context 'with Austrian numbers' do
+      it 'detects mobile' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '43', national: '6641234567', country: :at)
+        expect(phone.phone_type).to eq(:mobile)
+      end
+
+      it 'detects toll_free' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '43', national: '8001234567', country: :at)
+        expect(phone.phone_type).to eq(:toll_free)
+      end
+    end
+
+    context 'with Norwegian numbers' do
+      it 'detects mobile' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '47', national: '41234567', country: :no)
+        expect(phone.phone_type).to eq(:mobile)
+      end
+
+      it 'detects toll_free' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '47', national: '80012345', country: :no)
+        expect(phone.phone_type).to eq(:toll_free)
+      end
+    end
+
+    context 'with Polish numbers' do
+      it 'detects mobile' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '48', national: '512345678', country: :pl)
+        expect(phone.phone_type).to eq(:mobile)
+      end
+
+      it 'detects toll_free' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '48', national: '800123456', country: :pl)
+        expect(phone.phone_type).to eq(:toll_free)
+      end
+    end
+
+    context 'with South African numbers' do
+      it 'detects mobile' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '27', national: '712345678', country: :za)
+        expect(phone.phone_type).to eq(:mobile)
+      end
+
+      it 'detects toll_free' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '27', national: '800123456', country: :za)
+        expect(phone.phone_type).to eq(:toll_free)
+      end
+    end
+
+    context 'with Argentine numbers' do
+      it 'detects mobile' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '54', national: '9123456789', country: :ar)
+        expect(phone.phone_type).to eq(:mobile)
+      end
+
+      it 'detects toll_free' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '54', national: '8001234567', country: :ar)
+        expect(phone.phone_type).to eq(:toll_free)
+      end
+    end
+
+    context 'with Colombian numbers' do
+      it 'detects mobile' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '57', national: '3123456789', country: :co)
+        expect(phone.phone_type).to eq(:mobile)
+      end
+
+      it 'detects toll_free' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '57', national: '8001234567', country: :co)
+        expect(phone.phone_type).to eq(:toll_free)
+      end
+    end
+
+    context 'with Chilean numbers' do
+      it 'detects mobile' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '56', national: '912345678', country: :cl)
+        expect(phone.phone_type).to eq(:mobile)
+      end
+
+      it 'detects toll_free' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '56', national: '800123456', country: :cl)
+        expect(phone.phone_type).to eq(:toll_free)
+      end
+    end
+
+    context 'with Egyptian numbers' do
+      it 'detects mobile' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '20', national: '1012345678', country: :eg)
+        expect(phone.phone_type).to eq(:mobile)
+      end
+
+      it 'detects toll_free' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '20', national: '8001234567', country: :eg)
+        expect(phone.phone_type).to eq(:toll_free)
       end
     end
   end
