@@ -55,6 +55,12 @@ module Philiprehberger
         other.is_a?(PhoneNumber) && e164 == other.e164
       end
 
+      def similar_to?(other)
+        return false unless other.is_a?(PhoneNumber)
+
+        e164 == other.e164
+      end
+
       def to_h
         {
           country_code: country_code,
