@@ -951,6 +951,44 @@ RSpec.describe Philiprehberger::Phone do
       end
     end
 
+    context 'with newly added countries' do
+      it 'validates Brazilian shortcode (5 digits)' do
+        expect(described_class.valid_shortcode?('12345', country: :br)).to be true
+      end
+
+      it 'validates Mexican shortcode (5 digits)' do
+        expect(described_class.valid_shortcode?('12345', country: :mx)).to be true
+      end
+
+      it 'validates Japanese shortcode (4 digits)' do
+        expect(described_class.valid_shortcode?('1234', country: :jp)).to be true
+      end
+
+      it 'validates Japanese shortcode (5 digits)' do
+        expect(described_class.valid_shortcode?('12345', country: :jp)).to be true
+      end
+
+      it 'validates South Korean shortcode (4 digits)' do
+        expect(described_class.valid_shortcode?('1234', country: :kr)).to be true
+      end
+
+      it 'rejects South Korean shortcode (5 digits)' do
+        expect(described_class.valid_shortcode?('12345', country: :kr)).to be false
+      end
+
+      it 'validates Italian shortcode (5 digits)' do
+        expect(described_class.valid_shortcode?('12345', country: :it)).to be true
+      end
+
+      it 'validates Spanish shortcode (5 digits)' do
+        expect(described_class.valid_shortcode?('12345', country: :es)).to be true
+      end
+
+      it 'validates Spanish shortcode (6 digits)' do
+        expect(described_class.valid_shortcode?('123456', country: :es)).to be true
+      end
+    end
+
     context 'with unsupported country' do
       it 'returns false for unknown country' do
         expect(described_class.valid_shortcode?('12345', country: :zz)).to be false
@@ -981,12 +1019,28 @@ RSpec.describe Philiprehberger::Phone do
       end
     end
 
-    context 'with non-US numbers' do
-      it 'returns nil for UK number' do
-        phone = Philiprehberger::Phone.parse('+442079460958')
-        expect(phone.carrier).to be_nil
+    context 'with Canadian numbers' do
+      it 'identifies Rogers number' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '1', national: '4161234567', country: :ca)
+        expect(phone.carrier).to eq('Rogers')
       end
+    end
 
+    context 'with UK numbers' do
+      it 'identifies EE number' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '44', national: '7412345678', country: :gb)
+        expect(phone.carrier).to eq('EE')
+      end
+    end
+
+    context 'with German numbers' do
+      it 'identifies Telekom number' do
+        phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '49', national: '1511234567', country: :de)
+        expect(phone.carrier).to eq('Telekom')
+      end
+    end
+
+    context 'with nil country' do
       it 'returns nil for nil country' do
         phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '99', national: '12345', country: nil)
         expect(phone.carrier).to be_nil
@@ -1155,6 +1209,23 @@ RSpec.describe Philiprehberger::Phone do
         phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '20', national: '8001234567', country: :eg)
         expect(phone.phone_type).to eq(:toll_free)
       end
+    end
+  end
+
+  describe '#country_name' do
+    it 'returns the human-readable name for a US number' do
+      phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '1', national: '5551234567', country: :us)
+      expect(phone.country_name).to eq('United States')
+    end
+
+    it 'returns nil for an unknown country' do
+      phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '99', national: '12345', country: :zz)
+      expect(phone.country_name).to be_nil
+    end
+
+    it 'returns nil when country is nil' do
+      phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '99', national: '12345', country: nil)
+      expect(phone.country_name).to be_nil
     end
   end
 

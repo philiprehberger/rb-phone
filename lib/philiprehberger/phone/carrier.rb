@@ -2,7 +2,7 @@
 
 module Philiprehberger
   module Phone
-    # Carrier identification based on NPA-NXX prefix ranges (US only for now)
+    # Carrier identification based on prefix ranges
     # These are representative ranges; real carrier data changes frequently
     CARRIER_PREFIXES = {
       us: {
@@ -24,6 +24,23 @@ module Philiprehberger
           434 435 440 442 443 445 447 458 463 469
           470 475 478 479 480 484
         ]
+      },
+      ca: {
+        'Rogers' => %w[416 647 437],
+        'Bell' => %w[613 514 819],
+        'Telus' => %w[604 778 250],
+        'Freedom' => %w[343 365]
+      },
+      gb: {
+        'EE' => %w[74],
+        'Three' => %w[73],
+        'Vodafone' => %w[77],
+        'O2' => %w[75]
+      },
+      de: {
+        'Telekom' => %w[151 160 170 171],
+        'Vodafone' => %w[152 162 172 173],
+        'O2' => %w[155 157 163 176 177 178 179]
       }
     }.freeze
 
@@ -34,14 +51,32 @@ module Philiprehberger
         prefixes = CARRIER_PREFIXES[@country]
         return nil unless prefixes
 
-        npa = @national[0, 3]
-        return nil unless npa && npa.length == 3
+        prefix = carrier_prefix_for_country
+        return nil unless prefix
 
-        prefixes.each do |carrier_name, npa_list|
-          return carrier_name if npa_list.include?(npa)
+        prefixes.each do |carrier_name, prefix_list|
+          return carrier_name if prefix_list.include?(prefix)
         end
 
         nil
+      end
+
+      private
+
+      def carrier_prefix_for_country
+        case @country
+        when :us, :ca
+          npa = @national[0, 3]
+          npa && npa.length == 3 ? npa : nil
+        when :gb
+          prefix = @national[0, 2]
+          prefix && prefix.length == 2 ? prefix : nil
+        when :de
+          prefix3 = @national[0, 3]
+          return prefix3 if prefix3 && prefix3.length == 3 && CARRIER_PREFIXES[:de].any? { |_, list| list.include?(prefix3) }
+
+          nil
+        end
       end
     end
   end
