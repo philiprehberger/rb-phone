@@ -66,6 +66,10 @@ phone.phone_type  # => :mobile
 
 phone = Philiprehberger::Phone.parse("+19001234567")
 phone.phone_type  # => :premium
+
+phone = Philiprehberger::Phone.parse("+18001234567")
+phone.toll_free?  # => true
+phone.mobile?     # => false
 ```
 
 ### Area Code Lookup
@@ -167,6 +171,10 @@ US, CA, GB, DE, FR, AU, JP, IN, BR, MX, ES, IT, NL, BE, CH, AT, SE, NO, DK, FI, 
 | `#international` | International format with country code |
 | `#country` | Country symbol (e.g. `:us`, `:gb`) |
 | `#phone_type` | Phone type: `:mobile`, `:landline`, `:toll_free`, `:premium`, `:unknown` |
+| `#mobile?` | Whether the number is a mobile line |
+| `#landline?` | Whether the number is a landline |
+| `#toll_free?` | Whether the number is toll-free |
+| `#premium?` | Whether the number is a premium-rate line |
 | `#area_code_info` | Area code metadata `{ area_code:, region: }` for US/CA/GB/DE |
 | `#similar_to?(other)` | Whether two numbers have the same E.164 representation |
 | `#country_name` | Human-readable country name (e.g. "United States") |

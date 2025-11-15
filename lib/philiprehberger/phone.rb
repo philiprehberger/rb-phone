@@ -80,6 +80,22 @@ module Philiprehberger
         COUNTRIES.dig(@country, :name)
       end
 
+      def mobile?
+        phone_type == :mobile
+      end
+
+      def landline?
+        phone_type == :landline
+      end
+
+      def toll_free?
+        phone_type == :toll_free
+      end
+
+      def premium?
+        phone_type == :premium
+      end
+
       def inspect
         "#<Philiprehberger::Phone::PhoneNumber #{e164} (#{country || 'unknown'})>"
       end
