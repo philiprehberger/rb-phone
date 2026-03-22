@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'spec_helper'
 RSpec.describe Philiprehberger::Phone do
   describe '.parse' do
     context 'with US numbers' do
