@@ -1,8 +1,8 @@
 # philiprehberger-phone
 
-[![Gem Version](https://badge.fury.io/rb/philiprehberger-phone.svg)](https://badge.fury.io/rb/philiprehberger-phone)
-$badge_line
-[![CI](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml)
+[![Tests](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml)
+[![Gem Version](https://badge.fury.io/rb/philiprehberger-phone.svg)](https://rubygems.org/gems/philiprehberger-phone)
+[![License](https://img.shields.io/github/license/philiprehberger/rb-phone)](LICENSE)
 
 Lightweight phone number parsing, validation, and formatting.
 
