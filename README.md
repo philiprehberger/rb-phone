@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-phone.svg)](https://rubygems.org/gems/philiprehberger-phone)
 [![License](https://img.shields.io/github/license/philiprehberger/rb-phone)](LICENSE)
 
-Lightweight phone number parsing, validation, and formatting.
+Lightweight phone number parsing, validation, and formatting
 
 ## Requirements
 
@@ -20,7 +20,7 @@ gem 'philiprehberger-phone'
 
 Or install directly:
 
-```sh
+```bash
 gem install philiprehberger-phone
 ```
 
@@ -88,7 +88,7 @@ US, CA, GB, DE, FR, AU, JP, IN, BR.
 
 ## Development
 
-```sh
+```bash
 bundle install
 bundle exec rspec
 bundle exec rubocop
@@ -96,4 +96,4 @@ bundle exec rubocop
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT
