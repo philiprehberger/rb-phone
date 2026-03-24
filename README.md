@@ -15,7 +15,7 @@ Lightweight phone number parsing, validation, and formatting
 Add to your Gemfile:
 
 ```ruby
-gem 'philiprehberger-phone'
+gem "philiprehberger-phone"
 ```
 
 Or install directly:
