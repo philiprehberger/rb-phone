@@ -55,6 +55,25 @@ module Philiprehberger
         other.is_a?(PhoneNumber) && e164 == other.e164
       end
 
+      def to_h
+        {
+          country_code: country_code,
+          national: national,
+          country: country,
+          e164: e164,
+          formatted: formatted,
+          international: international,
+          valid: valid?,
+          phone_type: phone_type,
+          area_code_info: area_code_info,
+          carrier: carrier
+        }
+      end
+
+      def inspect
+        "#<Philiprehberger::Phone::PhoneNumber #{e164} (#{country || 'unknown'})>"
+      end
+
       private
 
       def format_national

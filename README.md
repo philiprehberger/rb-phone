@@ -1,8 +1,15 @@
 # philiprehberger-phone
 
-[![Tests](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml) [![Gem Version](https://img.shields.io/gem/v/philiprehberger-phone)](https://rubygems.org/gems/philiprehberger-phone) [![GitHub release](https://img.shields.io/github/v/release/philiprehberger/rb-phone)](https://github.com/philiprehberger/rb-phone/releases) [![GitHub last commit](https://img.shields.io/github/last-commit/philiprehberger/rb-phone)](https://github.com/philiprehberger/rb-phone/commits/main) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Bug Reports](https://img.shields.io/badge/bug-reports-red.svg)](https://github.com/philiprehberger/rb-phone/issues) [![Feature Requests](https://img.shields.io/badge/feature-requests-blue.svg)](https://github.com/philiprehberger/rb-phone/issues) [![GitHub Sponsors](https://img.shields.io/badge/sponsor-philiprehberger-ea4aaa.svg?logo=github)](https://github.com/sponsors/philiprehberger)
+[![Tests](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-phone/actions/workflows/ci.yml)
+[![Gem Version](https://badge.fury.io/rb/philiprehberger-phone.svg)](https://rubygems.org/gems/philiprehberger-phone)
+[![GitHub release](https://img.shields.io/github/v/release/philiprehberger/rb-phone)](https://github.com/philiprehberger/rb-phone/releases)
+[![Last updated](https://img.shields.io/github/last-commit/philiprehberger/rb-phone)](https://github.com/philiprehberger/rb-phone/commits/main)
+[![License](https://img.shields.io/github/license/philiprehberger/rb-phone)](LICENSE)
+[![Bug Reports](https://img.shields.io/github/issues/philiprehberger/rb-phone/bug)](https://github.com/philiprehberger/rb-phone/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+[![Feature Requests](https://img.shields.io/github/issues/philiprehberger/rb-phone/enhancement)](https://github.com/philiprehberger/rb-phone/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
+[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
-Lightweight phone number parsing, validation, formatting, and metadata lookup for 36 countries.
+Lightweight phone number parsing, validation, formatting, and metadata lookup for 36 countries
 
 ## Requirements
 
@@ -23,8 +30,6 @@ gem install philiprehberger-phone
 ```
 
 ## Usage
-
-### Parsing and Formatting
 
 ```ruby
 require "philiprehberger/phone"
@@ -99,6 +104,14 @@ phone = Philiprehberger::Phone::PhoneNumber.new(country_code: "1", national: "21
 phone.carrier  # => "AT&T"
 ```
 
+### Serialization
+
+```ruby
+phone = Philiprehberger::Phone.parse("+15551234567")
+phone.to_h
+# => { country_code: "1", national: "5551234567", country: :us, ... }
+```
+
 ### Supported Countries
 
 US, CA, GB, DE, FR, AU, JP, IN, BR, MX, ES, IT, NL, BE, CH, AT, SE, NO, DK, FI, PL, PT, IE, RU, CN, KR, SG, NZ, ZA, NG, KE, EG, AR, CL, CO, PE.
@@ -128,6 +141,8 @@ US, CA, GB, DE, FR, AU, JP, IN, BR, MX, ES, IT, NL, BE, CH, AT, SE, NO, DK, FI, 
 | `#phone_type` | Phone type: `:mobile`, `:landline`, `:toll_free`, `:premium`, `:unknown` |
 | `#area_code_info` | Area code metadata `{ area_code:, region: }` for US/CA/GB/DE |
 | `#carrier` | Carrier name based on prefix (US only) |
+| `#to_h` | Hash representation with all phone number attributes |
+| `#inspect` | Human-readable debug string |
 
 ## Development
 
@@ -139,7 +154,10 @@ bundle exec rubocop
 
 ## Support
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Philip%20Rehberger-blue?logo=linkedin)](https://linkedin.com/in/philiprehberger) [![More Packages](https://img.shields.io/badge/more-packages-blue.svg)](https://github.com/philiprehberger?tab=repositories)
+If you find this package useful, consider giving it a star on GitHub — it helps motivate continued maintenance and development.
+
+[![LinkedIn](https://img.shields.io/badge/Philip%20Rehberger-LinkedIn-0A66C2?logo=linkedin)](https://www.linkedin.com/in/philiprehberger)
+[![More packages](https://img.shields.io/badge/more-open%20source%20packages-blue)](https://philiprehberger.com/open-source-packages)
 
 ## License
 

@@ -7,6 +7,18 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-03-29
+
+### Added
+- `#to_h` method on `PhoneNumber` for hash serialization
+- `#inspect` method on `PhoneNumber` for human-readable debug output
+- Phone type detection patterns for 21 additional countries (now covers all 36)
+
+### Fixed
+- Gemspec authors, email, ruby version, and file glob to match template guide
+- README badges, usage section, and support section to match template guide
+- Add missing `.github/` files (issue templates, dependabot, PR template)
+
 ## [0.3.0] - 2026-03-28
 
 ### Added
@@ -83,7 +95,8 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Support for US, CA, GB, DE, FR, AU, JP, IN, BR
 - Immutable `PhoneNumber` value object with equality comparison
 
-[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/philiprehberger/rb-phone/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/philiprehberger/rb-phone/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/philiprehberger/rb-phone/compare/v0.1.9...v0.2.0
 [0.1.9]: https://github.com/philiprehberger/rb-phone/compare/v0.1.8...v0.1.9
