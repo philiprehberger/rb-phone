@@ -13,14 +13,14 @@ Gem::Specification.new do |spec|
                      'and format as E.164, national, or international. Supports 36 countries with ' \
                      'phone type detection, area code lookup, vanity number conversion, SMS shortcode ' \
                      'validation, and carrier identification — all without external dependencies.'
-  spec.homepage = 'https://github.com/philiprehberger/rb-phone'
+  spec.homepage      = 'https://philiprehberger.com/open-source-packages/ruby/philiprehberger-phone'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 3.1.0'
 
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = spec.homepage
-  spec.metadata['changelog_uri'] = "#{spec.homepage}/blob/main/CHANGELOG.md"
-  spec.metadata['bug_tracker_uri'] = "#{spec.homepage}/issues"
+  spec.metadata['source_code_uri']       = 'https://github.com/philiprehberger/rb-phone'
+  spec.metadata['changelog_uri']         = 'https://github.com/philiprehberger/rb-phone/blob/main/CHANGELOG.md'
+  spec.metadata['bug_tracker_uri']       = 'https://github.com/philiprehberger/rb-phone/issues'
   spec.metadata['rubygems_mfa_required'] = 'true'
 
   spec.files = Dir['lib/**/*.rb', 'LICENSE', 'README.md', 'CHANGELOG.md']
