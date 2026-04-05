@@ -390,6 +390,42 @@ RSpec.describe Philiprehberger::Phone do
       end
     end
 
+    describe '#similar_to?' do
+      it 'returns true for two numbers with the same E.164' do
+        a = Philiprehberger::Phone.parse('+1 (555) 123-4567')
+        b = Philiprehberger::Phone.parse('+15551234567')
+        expect(a.similar_to?(b)).to be true
+      end
+
+      it 'returns true for numbers parsed with different formatting' do
+        a = Philiprehberger::Phone.parse('+1-555-123-4567')
+        b = Philiprehberger::Phone.parse('+1.555.123.4567')
+        expect(a.similar_to?(b)).to be true
+      end
+
+      it 'returns false for different numbers' do
+        a = Philiprehberger::Phone.parse('+15551234567')
+        b = Philiprehberger::Phone.parse('+15559876543')
+        expect(a.similar_to?(b)).to be false
+      end
+
+      it 'returns false for numbers from different countries' do
+        a = Philiprehberger::Phone.parse('+15551234567')
+        b = Philiprehberger::Phone.parse('+442079460958')
+        expect(a.similar_to?(b)).to be false
+      end
+
+      it 'returns false when compared with non-PhoneNumber' do
+        a = Philiprehberger::Phone.parse('+15551234567')
+        expect(a.similar_to?('+15551234567')).to be false
+      end
+
+      it 'returns true when comparing a number to itself' do
+        a = Philiprehberger::Phone.parse('+442079460958')
+        expect(a.similar_to?(a)).to be true
+      end
+    end
+
     describe '#valid? with nil country' do
       it 'returns false when country is nil' do
         phone = described_class.new(country_code: '1', national: '5551234567', country: nil)

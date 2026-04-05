@@ -7,6 +7,11 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-04-04
+
+### Added
+- `#similar_to?(other)` method on `PhoneNumber` to compare two numbers by E.164 representation, ignoring formatting differences
+
 ## [0.4.1] - 2026-03-31
 
 ### Changed
@@ -100,7 +105,9 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Support for US, CA, GB, DE, FR, AU, JP, IN, BR
 - Immutable `PhoneNumber` value object with equality comparison
 
-[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/philiprehberger/rb-phone/compare/v0.4.1...v0.5.0
+[0.4.1]: https://github.com/philiprehberger/rb-phone/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/philiprehberger/rb-phone/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/philiprehberger/rb-phone/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/philiprehberger/rb-phone/compare/v0.1.9...v0.2.0

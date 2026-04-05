@@ -92,6 +92,19 @@ Philiprehberger::Phone.valid_shortcode?("123456", country: :us)  # => true
 Philiprehberger::Phone.valid_shortcode?("1234", country: :us)    # => false
 ```
 
+### Similar Comparison
+
+```ruby
+a = Philiprehberger::Phone.parse("+1 (555) 123-4567")
+b = Philiprehberger::Phone.parse("+1-555-123-4567")
+
+a.similar_to?(b)  # => true (same E.164: "+15551234567")
+a == b             # => true
+
+c = Philiprehberger::Phone.parse("+44 20 7946 0958")
+a.similar_to?(c)   # => false
+```
+
 ### Carrier Identification
 
 ```ruby
@@ -135,6 +148,7 @@ US, CA, GB, DE, FR, AU, JP, IN, BR, MX, ES, IT, NL, BE, CH, AT, SE, NO, DK, FI, 
 | `#country` | Country symbol (e.g. `:us`, `:gb`) |
 | `#phone_type` | Phone type: `:mobile`, `:landline`, `:toll_free`, `:premium`, `:unknown` |
 | `#area_code_info` | Area code metadata `{ area_code:, region: }` for US/CA/GB/DE |
+| `#similar_to?(other)` | Whether two numbers have the same E.164 representation |
 | `#carrier` | Carrier name based on prefix (US only) |
 | `#to_h` | Hash representation with all phone number attributes |
 | `#inspect` | Human-readable debug string |
