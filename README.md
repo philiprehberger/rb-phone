@@ -37,6 +37,7 @@ phone.country       # => :us
 phone.e164          # => "+15551234567"
 phone.formatted     # => "(555) 123-4567"
 phone.international # => "+1 (555) 123-4567"
+phone.country_name  # => "United States"
 ```
 
 ### Country Hint
@@ -90,7 +91,11 @@ Philiprehberger::Phone.vanity_to_digits("1-800-COLLECT")  # => "18002655328"
 Philiprehberger::Phone.valid_shortcode?("12345", country: :us)   # => true
 Philiprehberger::Phone.valid_shortcode?("123456", country: :us)  # => true
 Philiprehberger::Phone.valid_shortcode?("1234", country: :us)    # => false
+Philiprehberger::Phone.valid_shortcode?("12345", country: :br)  # => true
+Philiprehberger::Phone.valid_shortcode?("1234", country: :kr)   # => true
 ```
+
+Supported shortcode countries: US, CA, GB, DE, FR, AU, IN, BR, MX, JP, KR, IT, ES.
 
 ### Similar Comparison
 
@@ -107,9 +112,24 @@ a.similar_to?(c)   # => false
 
 ### Carrier Identification
 
+Carrier lookup is supported for US, CA, GB, and DE.
+
 ```ruby
 phone = Philiprehberger::Phone::PhoneNumber.new(country_code: "1", national: "2125551234", country: :us)
 phone.carrier  # => "AT&T"
+
+phone = Philiprehberger::Phone::PhoneNumber.new(country_code: "1", national: "4161234567", country: :ca)
+phone.carrier  # => "Rogers"
+```
+
+### Country Name
+
+```ruby
+phone = Philiprehberger::Phone.parse("+15551234567")
+phone.country_name  # => "United States"
+
+phone = Philiprehberger::Phone.parse("+442079460958")
+phone.country_name  # => "United Kingdom"
 ```
 
 ### Serialization
@@ -149,7 +169,8 @@ US, CA, GB, DE, FR, AU, JP, IN, BR, MX, ES, IT, NL, BE, CH, AT, SE, NO, DK, FI, 
 | `#phone_type` | Phone type: `:mobile`, `:landline`, `:toll_free`, `:premium`, `:unknown` |
 | `#area_code_info` | Area code metadata `{ area_code:, region: }` for US/CA/GB/DE |
 | `#similar_to?(other)` | Whether two numbers have the same E.164 representation |
-| `#carrier` | Carrier name based on prefix (US only) |
+| `#country_name` | Human-readable country name (e.g. "United States") |
+| `#carrier` | Carrier name based on prefix (US, CA, GB, DE) |
 | `#to_h` | Hash representation with all phone number attributes |
 | `#inspect` | Human-readable debug string |
 

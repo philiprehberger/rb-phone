@@ -10,7 +10,13 @@ module Philiprehberger
       de: { lengths: [4, 5] },
       fr: { lengths: [5] },
       au: { lengths: [6] },
-      in: { lengths: [5, 6] }
+      in: { lengths: [5, 6] },
+      br: { lengths: [5] },
+      mx: { lengths: [5] },
+      jp: { lengths: [4, 5] },
+      kr: { lengths: [4] },
+      it: { lengths: [5] },
+      es: { lengths: [5, 6] }
     }.freeze
 
     module ShortcodeValidation

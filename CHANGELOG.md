@@ -7,6 +7,13 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-04-05
+
+### Added
+- Carrier identification for Canada, UK, and Germany
+- SMS shortcode validation for Brazil, Mexico, Japan, South Korea, Italy, and Spain
+- `PhoneNumber#country_name` method exposing the human-readable country name
+
 ## [0.5.0] - 2026-04-04
 
 ### Added
@@ -105,7 +112,8 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Support for US, CA, GB, DE, FR, AU, JP, IN, BR
 - Immutable `PhoneNumber` value object with equality comparison
 
-[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/philiprehberger/rb-phone/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/philiprehberger/rb-phone/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/philiprehberger/rb-phone/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/philiprehberger/rb-phone/compare/v0.3.0...v0.4.0

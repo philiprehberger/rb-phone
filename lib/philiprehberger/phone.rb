@@ -76,6 +76,10 @@ module Philiprehberger
         }
       end
 
+      def country_name
+        COUNTRIES.dig(@country, :name)
+      end
+
       def inspect
         "#<Philiprehberger::Phone::PhoneNumber #{e164} (#{country || 'unknown'})>"
       end
