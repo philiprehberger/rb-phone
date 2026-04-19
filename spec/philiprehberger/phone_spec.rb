@@ -1229,6 +1229,34 @@ RSpec.describe Philiprehberger::Phone do
     end
   end
 
+  describe '#masked' do
+    it 'masks everything except the last 4 digits by default' do
+      phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '1', national: '5551234567', country: :us)
+      expect(phone.masked).to eq('+1******4567')
+    end
+
+    it 'masks every national digit when visible is 0' do
+      phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '1', national: '5551234567', country: :us)
+      expect(phone.masked(visible: 0)).to eq('+1**********')
+    end
+
+    it 'returns full E.164 without overflow when visible exceeds national length' do
+      phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '1', national: '5551234567', country: :us)
+      expect(phone.masked(visible: 99)).to eq('+15551234567')
+    end
+
+    it 'preserves a two-digit country code' do
+      phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '44', national: '2079460958', country: :gb)
+      expect(phone.masked(visible: 4)).to eq('+44******0958')
+    end
+
+    it 'returns a string of the same length as e164' do
+      phone = Philiprehberger::Phone::PhoneNumber.new(country_code: '1', national: '5551234567', country: :us)
+      expect(phone.masked(visible: 4).length).to eq(phone.e164.length)
+      expect(phone.masked(visible: 0).length).to eq(phone.e164.length)
+    end
+  end
+
   describe 'COUNTRIES constant' do
     it 'has at least 30 countries' do
       expect(Philiprehberger::Phone::COUNTRIES.size).to be >= 30

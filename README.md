@@ -136,6 +136,15 @@ phone = Philiprehberger::Phone.parse("+442079460958")
 phone.country_name  # => "United Kingdom"
 ```
 
+### Masking
+
+```ruby
+phone = Philiprehberger::Phone.parse("+15551234567")
+phone.masked              # => "+1******4567"
+phone.masked(visible: 0)  # => "+1**********"
+phone.masked(visible: 99) # => "+15551234567"
+```
+
 ### Serialization
 
 ```ruby
@@ -179,6 +188,7 @@ US, CA, GB, DE, FR, AU, JP, IN, BR, MX, ES, IT, NL, BE, CH, AT, SE, NO, DK, FI, 
 | `#similar_to?(other)` | Whether two numbers have the same E.164 representation |
 | `#country_name` | Human-readable country name (e.g. "United States") |
 | `#carrier` | Carrier name based on prefix (US, CA, GB, DE) |
+| `#masked(visible:)` | E.164 form with national digits masked as `*` except the last `visible` (default 4) |
 | `#to_h` | Hash representation with all phone number attributes |
 | `#inspect` | Human-readable debug string |
 

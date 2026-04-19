@@ -51,6 +51,13 @@ module Philiprehberger
         e164
       end
 
+      def masked(visible: 4)
+        digits = @national
+        clamped = visible.clamp(0, digits.length)
+        masked_count = digits.length - clamped
+        "+#{@country_code}#{'*' * masked_count}#{digits[masked_count..]}"
+      end
+
       def ==(other)
         other.is_a?(PhoneNumber) && e164 == other.e164
       end

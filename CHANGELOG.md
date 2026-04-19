@@ -7,6 +7,11 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-04-18
+
+### Added
+- `PhoneNumber#masked(visible: 4)` — returns E.164 form with national digits replaced by `*` except the last `visible` digits; country code remains visible
+
 ## [0.6.1] - 2026-04-07
 
 ### Added
