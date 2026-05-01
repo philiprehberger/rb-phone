@@ -1287,4 +1287,29 @@ RSpec.describe Philiprehberger::Phone do
       end
     end
   end
+
+  describe '.format' do
+    it 'formats E.164 directly without an explicit PhoneNumber' do
+      expect(Philiprehberger::Phone.format('4155551212', format: :e164, country: :us))
+        .to eq('+14155551212')
+    end
+
+    it 'formats national style' do
+      result = Philiprehberger::Phone.format('4155551212', format: :national, country: :us)
+      parsed = Philiprehberger::Phone.parse('4155551212', country: :us)
+      expect(result).to eq(parsed.formatted)
+    end
+
+    it 'formats international style' do
+      result = Philiprehberger::Phone.format('4155551212', format: :international, country: :us)
+      parsed = Philiprehberger::Phone.parse('4155551212', country: :us)
+      expect(result).to eq(parsed.international)
+    end
+
+    it 'raises ArgumentError on unknown format symbols' do
+      expect do
+        Philiprehberger::Phone.format('4155551212', format: :weird, country: :us)
+      end.to raise_error(ArgumentError, /Unknown format/)
+    end
+  end
 end

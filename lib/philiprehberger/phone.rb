@@ -158,6 +158,27 @@ module Philiprehberger
       false
     end
 
+    FORMATS = {
+      e164: :e164,
+      national: :formatted,
+      international: :international
+    }.freeze
+
+    # Parse and format an input in one call.
+    #
+    # @param input [String] phone number in any recognized form
+    # @param format [Symbol] `:e164`, `:national`, or `:international`
+    # @param country [Symbol, nil] country hint for parsing
+    # @return [String] formatted phone number
+    # @raise [ArgumentError] for unknown format symbols
+    # @raise [ParseError] when the input cannot be parsed
+    def self.format(input, format:, country: nil)
+      method_name = FORMATS[format] or
+        raise ArgumentError, "Unknown format: #{format.inspect} (expected :e164, :national, or :international)"
+
+      parse(input, country: country).public_send(method_name)
+    end
+
     def self.vanity_to_digits(input)
       VanityConversion.vanity_to_digits(input)
     end

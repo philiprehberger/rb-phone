@@ -48,6 +48,20 @@ phone.country_code  # => "44"
 phone.country       # => :gb
 ```
 
+### One-shot Formatting
+
+Skip the explicit `PhoneNumber` instance when you just need a string:
+
+```ruby
+Philiprehberger::Phone.format("4155551212", format: :e164, country: :us)
+# => "+14155551212"
+
+Philiprehberger::Phone.format("4155551212", format: :international, country: :us)
+# => "+1 415 555 1212"
+```
+
+Accepted formats: `:e164`, `:national`, `:international`.
+
 ### Validation
 
 ```ruby
@@ -167,6 +181,7 @@ US, CA, GB, DE, FR, AU, JP, IN, BR, MX, ES, IT, NL, BE, CH, AT, SE, NO, DK, FI, 
 | `.valid?(input, country: nil)` | Check if a phone number is valid |
 | `.vanity_to_digits(input)` | Convert vanity letters to digits (e.g. "1-800-FLOWERS") |
 | `.valid_shortcode?(input, country: :us)` | Validate an SMS shortcode for a country |
+| `.format(input, format:, country: nil)` | Parse and format in one call; `format:` accepts `:e164`, `:national`, or `:international` |
 
 ### `Philiprehberger::Phone::PhoneNumber`
 

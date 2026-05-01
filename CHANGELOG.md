@@ -7,6 +7,11 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-05-01
+
+### Added
+- `Phone.format(input, format:, country:)` — top-level formatter that parses + renders in one call. Supported formats: `:e164`, `:national`, `:international`. Raises `ArgumentError` on unknown formats and `ParseError` on bad input.
+
 ## [0.7.0] - 2026-04-18
 
 ### Added
