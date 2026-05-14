@@ -7,6 +7,11 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-05-13
+
+### Added
+- `Phone.country_of(input, country:)` — non-raising convenience that returns the detected country symbol (e.g. `:us`) or `nil` for unparseable input.
+
 ## [0.8.0] - 2026-05-01
 
 ### Added
@@ -127,7 +132,10 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Support for US, CA, GB, DE, FR, AU, JP, IN, BR
 - Immutable `PhoneNumber` value object with equality comparison
 
-[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/philiprehberger/rb-phone/compare/v0.8.0...v0.9.0
+[0.8.0]: https://github.com/philiprehberger/rb-phone/compare/v0.7.0...v0.8.0
+[0.7.0]: https://github.com/philiprehberger/rb-phone/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/philiprehberger/rb-phone/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/philiprehberger/rb-phone/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/philiprehberger/rb-phone/compare/v0.4.1...v0.5.0

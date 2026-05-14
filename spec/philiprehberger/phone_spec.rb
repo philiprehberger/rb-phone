@@ -604,6 +604,24 @@ RSpec.describe Philiprehberger::Phone do
     end
   end
 
+  describe '.country_of' do
+    it 'detects country from E.164 input' do
+      expect(described_class.country_of('+15551234567')).to eq(:us)
+    end
+
+    it 'detects country from a country hint' do
+      expect(described_class.country_of('020 7946 0958', country: :gb)).to eq(:gb)
+    end
+
+    it 'returns nil for an empty input' do
+      expect(described_class.country_of('')).to be_nil
+    end
+
+    it 'returns nil for an unknown country hint' do
+      expect(described_class.country_of('12345', country: :zz)).to be_nil
+    end
+  end
+
   describe '#phone_type' do
     context 'with US numbers' do
       it 'detects toll-free number' do

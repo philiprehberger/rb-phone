@@ -69,6 +69,16 @@ Philiprehberger::Phone.valid?("+44 20 7946 0958")  # => true
 Philiprehberger::Phone.valid?("+1 555")             # => false
 ```
 
+### Country Detection
+
+`Phone.country_of` returns the country symbol for a number (or `nil`) without raising:
+
+```ruby
+Philiprehberger::Phone.country_of("+15551234567")               # => :us
+Philiprehberger::Phone.country_of("020 7946 0958", country: :gb)  # => :gb
+Philiprehberger::Phone.country_of("garbage")                    # => nil
+```
+
 ### Phone Type Detection
 
 ```ruby
@@ -179,6 +189,7 @@ US, CA, GB, DE, FR, AU, JP, IN, BR, MX, ES, IT, NL, BE, CH, AT, SE, NO, DK, FI, 
 |--------|-------------|
 | `.parse(input, country: nil)` | Parse a phone number string into a `PhoneNumber` |
 | `.valid?(input, country: nil)` | Check if a phone number is valid |
+| `.country_of(input, country: nil)` | Country symbol (or `nil`) — non-raising convenience |
 | `.vanity_to_digits(input)` | Convert vanity letters to digits (e.g. "1-800-FLOWERS") |
 | `.valid_shortcode?(input, country: :us)` | Validate an SMS shortcode for a country |
 | `.format(input, format:, country: nil)` | Parse and format in one call; `format:` accepts `:e164`, `:national`, or `:international` |

@@ -158,6 +158,18 @@ module Philiprehberger
       false
     end
 
+    # Return the detected country symbol for `input`, or `nil` if the
+    # input cannot be associated with a known country. Never raises.
+    #
+    # @param input [String] phone number in any recognized form
+    # @param country [Symbol, nil] optional country hint
+    # @return [Symbol, nil]
+    def self.country_of(input, country: nil)
+      parse(input, country: country).country
+    rescue ParseError
+      nil
+    end
+
     FORMATS = {
       e164: :e164,
       national: :formatted,
