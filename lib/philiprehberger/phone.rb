@@ -26,6 +26,9 @@ module Philiprehberger
         freeze
       end
 
+      # Whether the phone number matches the country length rules.
+      #
+      # @return [Boolean]
       def valid?
         return false unless @country
 
@@ -35,22 +38,39 @@ module Philiprehberger
         data[:lengths].include?(@national.length)
       end
 
+      # E.164-formatted phone number (e.g. "+15551234567").
+      #
+      # @return [String]
       def e164
         "+#{@country_code}#{@national}"
       end
 
+      # National (country-specific) formatted representation.
+      #
+      # @return [String]
       def formatted
         format_national
       end
 
+      # International formatted representation with country code prefix.
+      #
+      # @return [String]
       def international
         "+#{@country_code} #{format_national}"
       end
 
+      # String representation (E.164).
+      #
+      # @return [String]
       def to_s
         e164
       end
 
+      # E.164 form with national digits masked as `*` except the last
+      # `visible` digits; country code remains visible.
+      #
+      # @param visible [Integer] number of trailing digits to keep visible
+      # @return [String]
       def masked(visible: 4)
         digits = @national
         clamped = visible.clamp(0, digits.length)
@@ -58,6 +78,10 @@ module Philiprehberger
         "+#{@country_code}#{'*' * masked_count}#{digits[masked_count..]}"
       end
 
+      # Equality based on E.164 representation.
+      #
+      # @param other [PhoneNumber] another phone number to compare
+      # @return [Boolean]
       def ==(other)
         other.is_a?(PhoneNumber) && e164 == other.e164
       end
@@ -68,6 +92,9 @@ module Philiprehberger
         e164 == other.e164
       end
 
+      # Hash representation including all derived attributes.
+      #
+      # @return [Hash]
       def to_h
         {
           country_code: country_code,
@@ -83,22 +110,37 @@ module Philiprehberger
         }
       end
 
+      # Human-readable country name (e.g. "United States").
+      #
+      # @return [String, nil]
       def country_name
         COUNTRIES.dig(@country, :name)
       end
 
+      # Whether the number is a mobile line.
+      #
+      # @return [Boolean]
       def mobile?
         phone_type == :mobile
       end
 
+      # Whether the number is a landline.
+      #
+      # @return [Boolean]
       def landline?
         phone_type == :landline
       end
 
+      # Whether the number is toll-free.
+      #
+      # @return [Boolean]
       def toll_free?
         phone_type == :toll_free
       end
 
+      # Whether the number is a premium-rate line.
+      #
+      # @return [Boolean]
       def premium?
         phone_type == :premium
       end
@@ -119,13 +161,9 @@ module Philiprehberger
         parts << digits unless digits.empty?
         parts.reject!(&:empty?)
 
-        format(data[:format], *parts)
+        data[:format] % parts
       rescue ArgumentError, TypeError
         @national
-      end
-
-      def format(pattern, *args)
-        pattern % args
       end
     end
 

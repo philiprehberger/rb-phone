@@ -4,6 +4,8 @@
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-phone.svg)](https://rubygems.org/gems/philiprehberger-phone)
 [![Last updated](https://img.shields.io/github/last-commit/philiprehberger/rb-phone)](https://github.com/philiprehberger/rb-phone/commits/main)
 
+![philiprehberger-phone](https://raw.githubusercontent.com/philiprehberger/rb-phone/main/package-card.webp)
+
 Lightweight phone number parsing, validation, formatting, and metadata lookup for 36 countries
 
 ## Requirements

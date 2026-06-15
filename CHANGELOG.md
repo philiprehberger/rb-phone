@@ -3,9 +3,17 @@
 All notable changes to this gem will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.9.1] - 2026-06-14
+
+### Changed
+- Added package card image to README
+- Added YARD doc comments to public instance methods
+- Inlined internal format helper to avoid shadowing Kernel#format
+- Fixed CHANGELOG wording to use "this project" per Keep a Changelog standard
 
 ## [0.9.0] - 2026-05-13
 
@@ -132,7 +140,8 @@ and this gem adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Support for US, CA, GB, DE, FR, AU, JP, IN, BR
 - Immutable `PhoneNumber` value object with equality comparison
 
-[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/philiprehberger/rb-phone/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/philiprehberger/rb-phone/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/philiprehberger/rb-phone/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/philiprehberger/rb-phone/compare/v0.6.1...v0.7.0
