@@ -48,7 +48,12 @@ phone.country_name  # => "United States"
 phone = Philiprehberger::Phone.parse("020 7946 0958", country: :gb)
 phone.country_code  # => "44"
 phone.country       # => :gb
+phone.e164          # => "+442079460958"
 ```
+
+A national trunk `0` (used by most of Europe, Australia, and others) is dropped
+when composing the E.164 number. It is preserved for NANP (`+1`) and for plans
+where a leading `0` is significant.
 
 ### One-shot Formatting
 
@@ -79,6 +84,15 @@ Philiprehberger::Phone.valid?("+1 555")             # => false
 Philiprehberger::Phone.country_of("+15551234567")               # => :us
 Philiprehberger::Phone.country_of("020 7946 0958", country: :gb)  # => :gb
 Philiprehberger::Phone.country_of("garbage")                    # => nil
+```
+
+The shared NANP `+1` code is disambiguated between the US and Canada by the
+3-digit area code, so Canadian numbers resolve to `:ca` (and get correct
+area-code and carrier lookups):
+
+```ruby
+Philiprehberger::Phone.country_of("+14161234567")  # => :ca (Toronto)
+Philiprehberger::Phone.country_of("+12125551234")  # => :us (New York)
 ```
 
 ### Phone Type Detection
@@ -138,6 +152,19 @@ a == b             # => true
 
 c = Philiprehberger::Phone.parse("+44 20 7946 0958")
 a.similar_to?(c)   # => false
+```
+
+`PhoneNumber` also implements `eql?` and `hash` (both keyed off E.164), so equal
+numbers dedupe in a `Set` and collapse as `Hash` keys regardless of formatting:
+
+```ruby
+require "set"
+
+a = Philiprehberger::Phone.parse("+1 (555) 123-4567")
+b = Philiprehberger::Phone.parse("+1-555-123-4567")
+
+Set.new([a, b]).size          # => 1
+{ a => "primary" }[b]         # => "primary"
 ```
 
 ### Carrier Identification
@@ -214,6 +241,7 @@ US, CA, GB, DE, FR, AU, JP, IN, BR, MX, ES, IT, NL, BE, CH, AT, SE, NO, DK, FI, 
 | `#premium?` | Whether the number is a premium-rate line |
 | `#area_code_info` | Area code metadata `{ area_code:, region: }` for US/CA/GB/DE |
 | `#similar_to?(other)` | Whether two numbers have the same E.164 representation |
+| `#eql?(other)` / `#hash` | E.164-keyed equality + hash, so numbers dedupe in a `Set` / collapse as `Hash` keys |
 | `#country_name` | Human-readable country name (e.g. "United States") |
 | `#carrier` | Carrier name based on prefix (US, CA, GB, DE) |
 | `#masked(visible:)` | E.164 form with national digits masked as `*` except the last `visible` (default 4) |

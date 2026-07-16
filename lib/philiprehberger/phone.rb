@@ -86,6 +86,22 @@ module Philiprehberger
         other.is_a?(PhoneNumber) && e164 == other.e164
       end
 
+      # Hash-key equality based on E.164 representation, so equal numbers
+      # collapse as Hash keys and dedupe in a Set.
+      #
+      # @param other [Object] another object to compare
+      # @return [Boolean]
+      def eql?(other)
+        other.is_a?(PhoneNumber) && e164 == other.e164
+      end
+
+      # Hash code derived from the E.164 representation.
+      #
+      # @return [Integer]
+      def hash
+        e164.hash
+      end
+
       def similar_to?(other)
         return false unless other.is_a?(PhoneNumber)
 
@@ -182,6 +198,9 @@ module Philiprehberger
 
         cc = data[:code]
         national = digits.delete_prefix(cc)
+        # Nationally-formatted input for trunk-prefix countries keeps a leading
+        # `0` (e.g. GB "020 7946 0958"); strip it so the E.164 is well-formed.
+        national = national.delete_prefix('0') if data[:trunk_prefix]
         sym = country
       else
         cc, national, sym = detect_country_from_digits(digits)
@@ -246,6 +265,9 @@ module Philiprehberger
 
         sym = COUNTRY_CODE_MAP[code].first
         national = digits[len..]
+        # NANP (+1) is shared by the US and Canada; disambiguate by the
+        # 3-digit area code so CA numbers get the right area-code/carrier data.
+        sym = :ca if code == '1' && AREA_CODES[:ca].key?(national[0, 3])
         return [code, national, sym]
       end
 

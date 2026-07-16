@@ -1330,4 +1330,113 @@ RSpec.describe Philiprehberger::Phone do
       end.to raise_error(ArgumentError, /Unknown format/)
     end
   end
+
+  describe '.parse trunk-prefix handling' do
+    it 'strips a leading trunk 0 from GB national input' do
+      phone = described_class.parse('020 7946 0958', country: :gb)
+      expect(phone.national).to eq('2079460958')
+      expect(phone.e164).to eq('+442079460958')
+      expect(phone).to be_valid
+    end
+
+    it 'strips a leading trunk 0 from DE national input' do
+      phone = described_class.parse('030 12345678', country: :de)
+      expect(phone.national).to eq('3012345678')
+      expect(phone.e164).to eq('+493012345678')
+    end
+
+    it 'strips a leading trunk 0 from AU national input' do
+      phone = described_class.parse('04 1234 5678', country: :au)
+      expect(phone.national).to eq('412345678')
+      expect(phone.e164).to eq('+61412345678')
+      expect(phone).to be_valid
+    end
+
+    it 'strips only a single leading 0' do
+      phone = described_class.parse('0020 7946 0958', country: :gb)
+      expect(phone.national).to eq('02079460958')
+    end
+
+    it 'still strips the country code when national input includes it' do
+      phone = described_class.parse('442079460958', country: :gb)
+      expect(phone.national).to eq('2079460958')
+      expect(phone.e164).to eq('+442079460958')
+    end
+
+    it 'leaves NANP (+1) national input untouched (no trunk stripping)' do
+      phone = described_class.parse('4155551212', country: :us)
+      expect(phone.national).to eq('4155551212')
+      expect(phone.e164).to eq('+14155551212')
+    end
+
+    it 'preserves a significant leading 0 for non-trunk countries (Italy)' do
+      phone = described_class.parse('0612345678', country: :it)
+      expect(phone.national).to eq('0612345678')
+    end
+  end
+
+  describe '.parse US/CA NANP disambiguation' do
+    it 'resolves a Canadian area code to :ca' do
+      phone = described_class.parse('+14161234567')
+      expect(phone.country).to eq(:ca)
+      expect(phone.country_name).to eq('Canada')
+    end
+
+    it 'resolves Vancouver (604) to :ca' do
+      phone = described_class.parse('+16041234567')
+      expect(phone.country).to eq(:ca)
+    end
+
+    it 'resolves a US area code to :us' do
+      phone = described_class.parse('+12125551234')
+      expect(phone.country).to eq(:us)
+    end
+
+    it 'defaults an unassigned NANP area code to :us' do
+      phone = described_class.parse('+19991234567')
+      expect(phone.country).to eq(:us)
+    end
+
+    it 'looks up Canadian area-code info after disambiguation' do
+      phone = described_class.parse('+14161234567')
+      expect(phone.area_code_info).to eq({ area_code: '416', region: 'Toronto, ON' })
+    end
+
+    it 'identifies the Canadian carrier after disambiguation' do
+      phone = described_class.parse('+14161234567')
+      expect(phone.carrier).to eq('Rogers')
+    end
+  end
+
+  describe Philiprehberger::Phone::PhoneNumber, '#eql? and #hash' do
+    let(:a) { Philiprehberger::Phone.parse('+1 (555) 123-4567') }
+    let(:b) { Philiprehberger::Phone.parse('+1-555-123-4567') }
+    let(:other) { Philiprehberger::Phone.parse('+15559876543') }
+
+    it 'treats numbers with the same E.164 as eql?' do
+      expect(a).to eql(b)
+    end
+
+    it 'gives equal numbers the same hash' do
+      expect(a.hash).to eq(b.hash)
+    end
+
+    it 'is not eql? for different numbers' do
+      expect(a).not_to eql(other)
+    end
+
+    it 'is not eql? to a non-PhoneNumber' do
+      expect(a.eql?('+15551234567')).to be false
+    end
+
+    it 'dedupes equal numbers in a Set' do
+      require 'set'
+      expect(Set.new([a, b, other]).size).to eq(2)
+    end
+
+    it 'collapses equal numbers as Hash keys' do
+      table = { a => 'primary' }
+      expect(table[b]).to eq('primary')
+    end
+  end
 end

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-07-15
+
+### Added
+- US/CA NANP disambiguation — `+1` numbers now resolve to `:ca` when the 3-digit area code belongs to a Canadian numbering plan area, so Canadian numbers get correct area-code and carrier lookups.
+- `PhoneNumber#eql?` and `#hash` (keyed off E.164) so equal numbers dedupe in a `Set` and collapse as `Hash` keys.
+
+### Fixed
+- Trunk-prefix parsing — nationally-formatted input for trunk-`0` countries (e.g. GB `"020 7946 0958"`, DE, AU) no longer leaves a leading `0` in the E.164 output. A per-country `trunk_prefix` marker drives the strip; NANP (`+1`) and plans where a leading `0` is significant are unaffected.
+
 ## [0.9.1] - 2026-06-14
 
 ### Changed
@@ -140,7 +149,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for US, CA, GB, DE, FR, AU, JP, IN, BR
 - Immutable `PhoneNumber` value object with equality comparison
 
-[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.9.1...HEAD
+[Unreleased]: https://github.com/philiprehberger/rb-phone/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/philiprehberger/rb-phone/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/philiprehberger/rb-phone/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/philiprehberger/rb-phone/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/philiprehberger/rb-phone/compare/v0.7.0...v0.8.0
